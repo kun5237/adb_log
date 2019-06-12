@@ -96,3 +96,21 @@ if Notfinish.status_code==200:
     print("未同步的设备接口PASS")
 else:
     print("未同步的设备接口有问题，返回的值为：",Notfinish.status_code)
+
+
+##查看离线的设备
+OutLine=requests.get(url+'/api/mini/v1/machine/aberrant?organization_id=0&outline=true',headers=Request_Headers)
+if OutLine.status_code==200:
+    print("查看离线的设备接口PASS")
+else:
+    print("查看离线的设备接口有问题，返回值为",OutLine.status_code)
+
+
+##查看无内容的设备
+Not_Content=requests.get(url+'/api/mini/v1/machine/aberrant?organization_id=0&notContent=true',headers=Request_Headers)
+if Not_Content.status_code==200:
+    print("查看离线的设备接口PASS")
+else:
+    print("查看离线的设备接口有问题，返回值为",Not_Content.status_code)
+
+

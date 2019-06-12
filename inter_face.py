@@ -2,7 +2,7 @@ import  requests
 import  pprint
 import time
 ###################登陆接口！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
-url="https://rcapi.hesiling.com"
+url="https://api.hesiling.com"
 
 new_time = time.strftime('%Y%m%d%H%M%S',time.localtime())  # 定义时间戳变量
 socket_token='7b00c9fa-6593-669a-0aea-c428e3f3b919-1553755542934'
@@ -54,7 +54,9 @@ A=r_2.json()
 if  A["data"]["hb_num"]==2:
     print("获取用户的资料接口PASS")
 else:
-    print('''返回的正确码为：''',A["data"]["hb_num"])
+    print('''数据更新了，返回的正确码为：''',A["data"]["hb_num"])
+
+
 
 
 
@@ -62,6 +64,7 @@ else:
 r_3=requests.get(url+'/api/manage/v1/machine/operating_data',headers=hearders_2)
 # pprint.pprint(r_3.json())
 r_panduan=r_3.json()
+print(r_panduan['data']['comingSoonNum'])
 if r_panduan['data']['comingSoonNum']==0:
     print("页面展示面板显示正常")
 else:
@@ -84,12 +87,12 @@ else:
 
 #-----------------------获取H5内容管理
 r_5=requests.get(url+'/api/manage/v1/content?page=1&size=20&kind=1&type=1&folder_id=0',headers=hearders_2)
-pprint.pprint(r_5.json())
-# r_5_rtn=r_5.json()
-# if  r_5_rtn['data'][0]['g_first_name']==0:
-#     print("获取H5内容管理PASS")
-# else:
-#     print("测试不通过")
+# pprint.pprint(r_5.json())
+r_5_rtn=r_5.json()
+if  r_5_rtn['data'][0]['g_first_name']==0:
+    print("获取H5内容管理PASS")
+else:
+    print("测试不通过， 或许原因是数据改变：：：",r_5_rtn['data'][0]['g_first_name'])
 
 #------------------------发布时，获取短信验证码
 get_code=requests.post(url+'/api/manage/v1/safe/sendMsg',headers=hearders_2)
@@ -159,32 +162,14 @@ ZY=GetTag.json()
 ChooseTag=ZY['data'][-1]['id']
 print(ZY['data'][-1]['id'])
 
-#**************************删除刚刚创建的标签
+# **************************删除刚刚创建的标签
 DelTag=requests.delete(url+"/api/manage/v1/tag"+'/'+ChooseTag,headers=hearders_2)
-pprint.pprint(DelTag.json())
-
-
-#************************新建组织机构
-EstOrg={
-    'name': 'handsome_kun'+new_time,
-    'parent_id': '0',
-    # 'mobile': '13333333333'
-
-}
-EstablishOrg=requests.post(url+'/api/manage/v1/organization',headers=hearders_2,json=EstOrg)
-pprint.pprint(EstablishOrg.json())
-
-#********************获取组织机构列表
-GetOrg=requests.get(url+'/api/manage/v1/organization',headers=hearders_2)
-# pprint.pprint(GetOrg.json())
-ZZZ=GetOrg.json()
-ThisOrg=ZZZ['data'][0]['children'][-1]['id']
-print(ThisOrg)
-
-
-#******删除创建的组织机构
-DelOrg=requests.delete(url+'/api/manage/v1/organization/'+ThisOrg,headers=hearders_2)
-pprint.pprint(DelOrg.json())
+# pprint.pprint(DelTag.json())
+DelTag_1=DelTag.json()
+if DelTag_1['msg']=='删除成功':
+    print('删除标签成功')
+else:
+    print('删除列表失败，原因是：：',DelTag_1['msg'])
 
 
 
